@@ -8,8 +8,9 @@ import {
   SidebarContent,
   SidebarFooter,
 } from "react-pro-sidebar";
-import "react-pro-sidebar/dist/css/styles.css";
 import "../../styles/sidebar.sass";
+
+import { Link } from "react-router-dom";
 
 import { RootState } from "../../store/store";
 import {
@@ -51,11 +52,12 @@ const Sidebar = () => {
       </SidebarHeader>
       <SidebarContent className="side-bar-content">
         <Menu iconShape="circle">
-          <MenuItem icon={<RiAddLine />}>Dashboard</MenuItem>
-          <SubMenu title="Components" icon={<AiOutlineTable />}>
-            <MenuItem>Component 1</MenuItem>
-            <MenuItem>Component 2</MenuItem>
-          </SubMenu>
+          <MenuItem icon={<RiAddLine />}>
+            <Link to="/">Thêm Thiết Bị</Link>
+          </MenuItem>
+          <MenuItem icon={<AiOutlineTable />}>
+            <Link to="/fakedevice">Danh Sách Thiết Bị Khác</Link>
+          </MenuItem>
         </Menu>
       </SidebarContent>
 
