@@ -11,26 +11,48 @@ import {
 import "react-pro-sidebar/dist/css/styles.css";
 import "../../styles/sidebar.sass";
 
-import { FaGem, FaHeart } from "react-icons/fa";
+import { RootState } from "../../store/store";
+import {
+  toggleAction,
+  collapsedAction,
+} from "../../feature/sidebar/sidebarSlice";
+import { useSelector, useDispatch } from "react-redux";
+
+import { FaBars } from "react-icons/fa";
+import { AiOutlineClose, AiOutlineTable } from "react-icons/ai";
+import { RiAddLine } from "react-icons/ri";
 
 const Sidebar = () => {
-  const [collapse, setCollapse] = useState(false);
-  const [toggle, useToggle] = useState(false);
+  const collapsed = useSelector((state: RootState) => state.sidebar.collapsed);
+  const toggled = useSelector((state: RootState) => state.sidebar.toggled);
+
+  const dispatch = useDispatch();
+
+  function handlerOnClick() {
+    dispatch(collapsedAction());
+  }
 
   return (
     <ProSidebar
       className="side-bar"
-      collapsed={false}
+      collapsed={collapsed}
       toggled={true}
       breakPoint="md"
     >
       <SidebarHeader className="side-bar-header">
-        <div>Viwater</div>
+        <div> {collapsed === true ? "" : "Viwater"}</div>
+        <MenuItem
+          className={
+            collapsed === true ? "btn-expanse close" : "btn-expanse open"
+          }
+          icon={collapsed === true ? <FaBars /> : <AiOutlineClose />}
+          onClick={handlerOnClick}
+        ></MenuItem>
       </SidebarHeader>
       <SidebarContent className="side-bar-content">
         <Menu iconShape="circle">
-          <MenuItem icon={<FaGem />}>Dashboard</MenuItem>
-          <SubMenu title="Components" icon={<FaHeart />}>
+          <MenuItem icon={<RiAddLine />}>Dashboard</MenuItem>
+          <SubMenu title="Components" icon={<AiOutlineTable />}>
             <MenuItem>Component 1</MenuItem>
             <MenuItem>Component 2</MenuItem>
           </SubMenu>
@@ -38,7 +60,7 @@ const Sidebar = () => {
       </SidebarContent>
 
       <SidebarFooter className="side-bar-footer">
-        <div>Footer</div>
+        <div>{collapsed === true ? "" : "Cello Checking"}</div>
       </SidebarFooter>
     </ProSidebar>
   );

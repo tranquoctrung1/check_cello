@@ -1,7 +1,7 @@
 .side-bar
     height: 100vh
 
-.side-bar-header
+.side-bar-header, .side-bar-footer
     display: flex
     justify-content: center
     align-items: center
@@ -11,6 +11,9 @@
     background: #0984e3
     color: white
 
+.side-bar-footer
+    font-size: 1rem
+
 .side-bar-content, .side-bar-footer
     background: #0984e3
     color: white
@@ -19,7 +22,16 @@
     background: #0984e3c7
 .pro-arrow
     color: white
-    border-color: none
+    border-color: white !important
 
 .pro-inner-list-item
     background: #74b9ff !important
+
+.btn-expanse
+    &.open
+        display: block
+        margin-left: 20px
+.btn-expanse
+    &.close
+        display: block
+        margin-left: 0px
