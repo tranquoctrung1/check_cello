@@ -1,13 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 export interface AddingDeviceState {
-    Serial: string;
-    ProvinceId: number;
+    value: Array<object>
 }
 
 const initialState: AddingDeviceState = {
-    Serial: "",
-    ProvinceId: 0
+    value: []
 }
 
 export const AddingDeviceSlice = createSlice({
@@ -15,13 +13,18 @@ export const AddingDeviceSlice = createSlice({
     initialState,
     reducers:
     {
-        submitAction : (state) => {
-            state = state;
+        addAction: (state, action: PayloadAction<Array<object>>) => {
+
+            state.value = action.payload;
+        },
+
+        addItemAction: (state, action: PayloadAction<object>) => {
+            state.value.push(action.payload);
         }
     }
 })
 
 
-export const {submitAction} = AddingDeviceSlice.actions;
+export const {addAction,addItemAction } = AddingDeviceSlice.actions;
 
 export default AddingDeviceSlice.reducer;
