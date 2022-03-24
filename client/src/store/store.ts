@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import SidebarReducer  from '../feature/sidebar/sidebarSlice';
+import AddingDeviceReducer from '../feature/AddingDevice/AddingDeviceSlice'
 
 export const store = configureStore({
   reducer: {
-    sidebar: SidebarReducer
+    sidebar: SidebarReducer,
+    addingDevice: AddingDeviceReducer
   },
 });
 

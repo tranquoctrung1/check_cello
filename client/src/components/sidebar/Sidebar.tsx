@@ -37,7 +37,7 @@ const Sidebar = () => {
     <ProSidebar
       className="side-bar"
       collapsed={collapsed}
-      toggled={true}
+      toggled={false}
       breakPoint="md"
     >
       <SidebarHeader className="side-bar-header">

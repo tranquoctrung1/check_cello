@@ -12,7 +12,7 @@ module.exports.Device = class Device {
 module.exports.getAll = async function () {
   let Connect = new ConnectDB.Connect();
 
-  let collection = Connect.connect(DeviceCollection);
+  let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.find({}).toArray();
 
@@ -24,7 +24,7 @@ module.exports.getAll = async function () {
 module.exports.getDeviceBySerial = async function (serial) {
   let Connect = new ConnectDB.Connect();
 
-  let collection = Connect.connect(DeviceCollection);
+  let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.find({ Serial: serial }).toArray();
 
@@ -36,22 +36,28 @@ module.exports.getDeviceBySerial = async function (serial) {
 module.exports.Insert = async function (data) {
   let Connect = new ConnectDB.Connect();
 
-  let collection = Connect.connect(DeviceCollection);
+  let collection = await Connect.connect(DeviceCollection);
 
-  let temp = [];
-  temp.push(data);
+  let check = await collection.find({ Serial: data.Serial }).toArray();
 
-  let result = await collection.insertMany(temp);
+  if (check.length <= 0) {
+    let temp = [];
+    temp.push(data);
 
-  Connect.disconnect();
+    let result = await collection.insertMany(temp);
 
-  return result;
+    Connect.disconnect();
+
+    return result.insertedCount;
+  }
+
+  return 0;
 };
 
 module.exports.Update = async function (data) {
   let Connect = new ConnectDB.Connect();
 
-  let collection = Connect.connect(DeviceCollection);
+  let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.updateMany(
     { Serial: data.Serial },
@@ -66,7 +72,7 @@ module.exports.Update = async function (data) {
 module.exports.Delete = async function (serial) {
   let Connect = new ConnectDB.Connect();
 
-  let collection = Connect.connect(DeviceCollection);
+  let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.deleteMany({ Serial: serial });
 

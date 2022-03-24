@@ -21,7 +21,9 @@ module.exports.getDeviceBySerial = async function (req, res) {
 module.exports.insert = async function (req, res) {
   try {
     let data = req.body;
-    res.status(200).json(await DeviceModel.insert(data).insertedCount);
+    let result = await DeviceModel.Insert(data);
+
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err.message);
   }
@@ -30,7 +32,7 @@ module.exports.insert = async function (req, res) {
 module.exports.update = async function (req, res) {
   try {
     let data = req.body;
-    res.status(200).json(await DeviceModel.update(data).modifiedCount);
+    res.status(200).json(await DeviceModel.Update(data).modifiedCount);
   } catch (err) {
     res.status(500).json(err.message);
   }
@@ -40,7 +42,7 @@ module.exports.delete = async function (req, res) {
   try {
     let serial = req.query.serial;
 
-    res.status(200).json(await DeviceModel.delete(serial).deletedCount);
+    res.status(200).json(await DeviceModel.Delete(serial).deletedCount);
   } catch (err) {
     res.status(500).json(err.message);
   }
