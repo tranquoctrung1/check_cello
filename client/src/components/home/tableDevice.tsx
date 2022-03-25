@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { RootState } from "../../store/store";
-import { addAction } from "../../feature/AddingDevice/AddingDeviceSlice";
+import {
+  addAction,
+  deleteAction,
+} from "../../feature/AddingDevice/AddingDeviceSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
+import SweetAlert from "react-bootstrap-sweetalert";
 import axios from "axios";
 
 const TableDevice = () => {
   const value = useSelector((state: RootState) => state.addingDevice.value);
   const hostname = useSelector((state: RootState) => state.hostname.value);
+
+  const [appear, setAppear] = useState(false);
+  const [appearError, setAppearError] = useState(false);
 
   const [filter, setFilter] = useState({
     serial: {
@@ -23,48 +30,55 @@ const TableDevice = () => {
     },
   });
 
-  const [rows, setRows] = useState<Array<object>>([]);
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    getData();
-  }, [value]);
-
-  function getData() {
+  const getData = useCallback(() => {
     let url = `${hostname}/device/getAll`;
     axios
       .get(url)
       .then((res) => {
         if (res.data.length > 0) {
-          setRows(res.data);
+          dispatch(addAction(res.data));
         }
       })
       .catch((err) => console.log(err.message));
-  }
+  }, [hostname, dispatch]);
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   function onSelectionChange(e) {
     console.log(e.value);
   }
 
-  function handleEditClick(e) {
-    console.log(e);
+  function handleRemoveClick(e) {
+    let url = `${hostname}/device/delete?id=${e._id}`;
+
+    axios
+      .delete(url)
+      .then((res) => {
+        if (res.data >= 1) {
+          dispatch(deleteAction(e));
+          setAppear(true);
+        } else {
+          setAppearError(true);
+        }
+      })
+      .catch((err) => console.log(err.message));
   }
 
-  function handleRemoveClick(e) {
-    console.log(e);
+  function onConfirm() {
+    setAppear(false);
+  }
+
+  function onErrorConfirm() {
+    setAppearError(false);
   }
 
   function actionBodyTemplate(rowData) {
     return (
       <div>
-        <Button
-          className="btn-primary"
-          onClick={() => handleEditClick(rowData)}
-          type="button"
-          icon="pi pi-pencil"
-        ></Button>
-
         <Button
           className="btn-danger"
           onClick={() => handleRemoveClick(rowData)}
@@ -84,7 +98,7 @@ const TableDevice = () => {
         emptyMessage="No devices found."
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} devices"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        value={rows}
+        value={value}
         selectionMode="single"
         onSelectionChange={onSelectionChange}
         dataKey="_id"
@@ -94,6 +108,7 @@ const TableDevice = () => {
         globalFilterFields={["serial", "privince"]}
       >
         <Column
+          key="_id"
           field="_id"
           header="ID"
           sortable
@@ -101,6 +116,7 @@ const TableDevice = () => {
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
         ></Column>
         <Column
+          key="ProvinceId"
           field="ProvinceId"
           header="Mã tỉnh"
           filterField="privince"
@@ -109,6 +125,7 @@ const TableDevice = () => {
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
         ></Column>
         <Column
+          key="Serial"
           field="Serial"
           headerStyle={{ width: "5rem" }}
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
@@ -122,6 +139,16 @@ const TableDevice = () => {
           body={actionBodyTemplate}
         />
       </DataTable>
+      {appear && (
+        <SweetAlert success title="Thành công" onConfirm={onConfirm}>
+          Xóa thành công
+        </SweetAlert>
+      )}
+      {appearError && (
+        <SweetAlert error title="Lỗi" onConfirm={onErrorConfirm}>
+          Xóa không thành công
+        </SweetAlert>
+      )}
     </div>
   );
 };

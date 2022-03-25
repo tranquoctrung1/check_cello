@@ -36,8 +36,8 @@ const Home = () => {
     axios
       .post(url, data)
       .then((res) => {
-        if (res.data >= 1) {
-          dispatch(addItemAction(res.data));
+        if (res.data.length >= 1) {
+          dispatch(addItemAction(res.data[0]));
           setAppear(true);
         } else {
           setAppearError(true);

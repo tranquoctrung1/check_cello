@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import SidebarReducer  from '../feature/sidebar/sidebarSlice';
 import AddingDeviceReducer from '../feature/AddingDevice/AddingDeviceSlice'
-import HostNameSlice  from '../feature/hostname/hostname';
+import HostnameReducer  from '../feature/hostname/hostname';
+import FakeDeviceReducer from '../feature/FakeDevice/fakeDeviceSlice'
 
 export const store = configureStore({
   reducer: {
     sidebar: SidebarReducer,
     addingDevice: AddingDeviceReducer,
-    hostname: HostNameSlice
+    hostname: HostnameReducer,
+    fakeDevice: FakeDeviceReducer
   },
 });
 
