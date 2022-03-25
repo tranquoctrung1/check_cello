@@ -40,9 +40,11 @@ module.exports.update = async function (req, res) {
 
 module.exports.delete = async function (req, res) {
   try {
-    let serial = req.query.serial;
+    let id = req.query.id;
 
-    res.status(200).json(await DeviceModel.Delete(serial).deletedCount);
+    let result = await DeviceModel.Delete(id);
+
+    res.status(200).json(result.deletedCount);
   } catch (err) {
     res.status(500).json(err.message);
   }

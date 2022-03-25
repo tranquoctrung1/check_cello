@@ -1,4 +1,5 @@
 const ConnectDB = require("../db/connect");
+const mongo = require("mongodb");
 
 const DeviceCollection = "Device";
 
@@ -38,7 +39,9 @@ module.exports.Insert = async function (data) {
 
   let collection = await Connect.connect(DeviceCollection);
 
-  let check = await collection.find({ Serial: data.Serial }).toArray();
+  let check = await collection
+    .find({ Serial: data.Serial, ProvinceId: data.ProvinceId })
+    .toArray();
 
   if (check.length <= 0) {
     let temp = [];
@@ -46,12 +49,16 @@ module.exports.Insert = async function (data) {
 
     let result = await collection.insertMany(temp);
 
+    if (result.insertedCount >= 1) {
+      result = await collection.find({ Serial: data.Serial }).toArray();
+    }
+
     Connect.disconnect();
 
-    return result.insertedCount;
+    return result;
   }
 
-  return 0;
+  return [];
 };
 
 module.exports.Update = async function (data) {
@@ -69,12 +76,12 @@ module.exports.Update = async function (data) {
   return result;
 };
 
-module.exports.Delete = async function (serial) {
+module.exports.Delete = async function (id) {
   let Connect = new ConnectDB.Connect();
 
   let collection = await Connect.connect(DeviceCollection);
 
-  let result = await collection.deleteMany({ Serial: serial });
+  let result = await collection.deleteMany({ _id: new mongo.ObjectId(id) });
 
   Connect.disconnect();
 
