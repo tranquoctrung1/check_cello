@@ -5,6 +5,7 @@ import ProSidebar from "./components/sidebar/Sidebar";
 
 import Home from "./components/home/home";
 import FakeDevice from "./components/fakeDevice/fakeDevice";
+import Headerbar from "./components/headerbar/Headerbar";
 
 function App() {
   useEffect(() => {
@@ -16,6 +17,7 @@ function App() {
         <div className="box-container">
           <div>
             <ProSidebar />
+            <Headerbar />
           </div>
           <div className="right-container">
             <Routes>
