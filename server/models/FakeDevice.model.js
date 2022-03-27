@@ -79,7 +79,11 @@ module.exports.Insert = async function (data) {
 
   if (recivedData.Serial == null || recivedData.Serial == "") {
     let checkExistsFakeDevice = await collection
-      .find({ Serial: recivedData.Serial, ProvinceId: recivedData.ProvinceId })
+      .find({
+        Serial: recivedData.Serial,
+        ProvinceId: recivedData.ProvinceId,
+        SiteId: recivedData.SiteId,
+      })
       .toArray();
 
     if (checkExistsFakeDevice.length <= 0) {
