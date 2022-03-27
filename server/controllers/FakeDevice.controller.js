@@ -46,6 +46,7 @@ module.exports.insert = async function (req, res) {
 
     res.status(200).json(await FakeDeviceModel.Insert(data));
   } catch (err) {
+    console.log(err.message);
     res.status(500).json(err.message);
   }
 };

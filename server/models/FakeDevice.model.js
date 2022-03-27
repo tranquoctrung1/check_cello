@@ -1,6 +1,7 @@
 const ConnectDB = require("../db/connect");
 
 const FakeDeviceCollection = "FakeDevice";
+const DeviceCollection = "Device";
 
 module.exports.FakeDevice = class FakeDevice {
   constructor(serial, siteid, sitename, provinceid) {
@@ -62,28 +63,70 @@ module.exports.getFakeDeviceByProvinceId = async function (provinceid) {
 module.exports.Insert = async function (data) {
   let Connect = new ConnectDB.Connect();
 
+  recivedData = {};
+  recivedData.Serial = data.serial;
+  recivedData.SiteId = data.siteId;
+  recivedData.SiteName = data.siteName;
+  recivedData.ProvinceId = data.provinceId;
+
   let collection = await Connect.connect(FakeDeviceCollection);
+  let deviceCollection = await Connect.connect(DeviceCollection);
 
-  let count = 0;
+  let result = {};
 
-  for (let item of data) {
-    let check = await collection.find({ Serial: item.Serial }).toArray();
+  result.IsFakeDevice = false;
+  result.IsRealDevice = false;
 
-    if (check.length <= 0) {
+  if (recivedData.Serial == null || recivedData.Serial == "") {
+    let checkExistsFakeDevice = await collection
+      .find({ Serial: recivedData.Serial, ProvinceId: recivedData.ProvinceId })
+      .toArray();
+
+    if (checkExistsFakeDevice.length <= 0) {
       let temp = [];
-      temp.push(item);
+      temp.push(recivedData);
 
-      let result = await collection.insertMany(temp);
+      await collection.insertMany(temp);
+    }
 
-      if (result.insertedCount != null && result.insertedCount != undefined) {
-        count += result.insertedCount;
+    result.IsFakeDevice = true;
+    result.IsRealDevice = false;
+  } else {
+    let check = await deviceCollection
+      .find({ Serial: recivedData.Serial, ProvinceId: recivedData.ProvinceId })
+      .toArray();
+
+    if (check.length > 0) {
+      result.IsRealDevice = true;
+      result.IsFakeDevice = false;
+
+      await collection.deleteMany({
+        Serial: recivedData.Serial,
+        ProvinceId: recivedData.ProvinceId,
+      });
+    } else {
+      let checkExistsFakeDevice = await collection
+        .find({
+          Serial: recivedData.Serial,
+          ProvinceId: recivedData.ProvinceId,
+        })
+        .toArray();
+
+      if (checkExistsFakeDevice.length <= 0) {
+        let temp = [];
+        temp.push(recivedData);
+
+        await collection.insertMany(temp);
       }
+
+      result.IsFakeDevice = true;
+      result.IsRealDevice = false;
     }
   }
 
   Connect.disconnect();
 
-  return count;
+  return result;
 };
 
 module.exports.Update = async function (data) {

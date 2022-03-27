@@ -21,6 +21,7 @@ module.exports.getDeviceBySerial = async function (req, res) {
 module.exports.insert = async function (req, res) {
   try {
     let data = req.body;
+
     let result = await DeviceModel.Insert(data);
 
     res.status(200).json(result);
