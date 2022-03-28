@@ -18,6 +18,43 @@ module.exports.getDeviceBySerial = async function (req, res) {
   }
 };
 
+module.exports.getDeviceBySerialAndProvinceId = async function (req, res) {
+  try {
+    let serial = req.query.serial;
+    let provinceid = req.query.provinceid;
+
+    res
+      .status(200)
+      .json(
+        await DeviceModel.getDeviceBySerialAndProvinceId(serial, provinceid)
+      );
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+module.exports.getDeviceBySerialAndProvinceIdAndViwaterId = async function (
+  req,
+  res
+) {
+  try {
+    let serial = req.query.serial;
+    let provinceid = req.query.provinceid;
+    let viwaterid = req.query.viwaterid;
+    res
+      .status(200)
+      .json(
+        await DeviceModel.getDeviceBySerialAndProvinceIdAndViwaterId(
+          serial,
+          provinceid,
+          viwaterid
+        )
+      );
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
 module.exports.insert = async function (req, res) {
   try {
     let data = req.body;

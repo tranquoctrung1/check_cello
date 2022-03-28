@@ -7,6 +7,16 @@ router.get("/getAll", DeviceController.getAll);
 
 router.get("/getDeviceBySerial", DeviceController.getDeviceBySerial);
 
+router.get(
+  "/getDeviceBySerialAndProvinceId",
+  DeviceController.getDeviceBySerialAndProvinceId
+);
+
+router.get(
+  "/getDeviceBySerialAndProvinceIdAndViwaterId",
+  DeviceController.getDeviceBySerialAndProvinceIdAndViwaterId
+);
+
 router.post("/insert", DeviceController.insert);
 
 router.patch("/update", DeviceController.update);

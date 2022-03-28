@@ -4,9 +4,12 @@ const mongo = require("mongodb");
 const DeviceCollection = "Device";
 
 module.exports.Device = class Device {
-  constructor(serial, provinceid) {
+  constructor(serial, provinceid, provincename, viwaterid, viwatername) {
     this.Serial = serial;
     this.ProvinceId = provinceid;
+    this.ProvinceName = provincename;
+    this.ViwaterId = viwaterid;
+    this.ViwaterName = viwatername;
   }
 };
 
@@ -34,13 +37,52 @@ module.exports.getDeviceBySerial = async function (serial) {
   return result;
 };
 
+module.exports.getDeviceBySerialAndProvinceId = async function (
+  serial,
+  provinceid
+) {
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(DeviceCollection);
+
+  let result = await collection
+    .find({ Serial: serial, ProvinceId: provinceid })
+    .toArray();
+
+  Connect.disconnect();
+
+  return result;
+};
+
+module.exports.getDeviceBySerialAndProvinceIdAndViwaterId = async function (
+  serial,
+  provinceid,
+  viwaterid
+) {
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(DeviceCollection);
+
+  let result = await collection
+    .find({ Serial: serial, ProvinceId: provinceid, ViwaterId: viwaterid })
+    .toArray();
+
+  Connect.disconnect();
+
+  return result;
+};
+
 module.exports.Insert = async function (data) {
   let Connect = new ConnectDB.Connect();
 
   let collection = await Connect.connect(DeviceCollection);
 
   let check = await collection
-    .find({ Serial: data.Serial, ProvinceId: data.ProvinceId })
+    .find({
+      Serial: data.Serial,
+      ProvinceId: data.ProvinceId,
+      ViwaterId: data.ViwaterId,
+    })
     .toArray();
 
   if (check.length <= 0) {
@@ -50,7 +92,13 @@ module.exports.Insert = async function (data) {
     let result = await collection.insertMany(temp);
 
     if (result.insertedCount >= 1) {
-      result = await collection.find({ Serial: data.Serial }).toArray();
+      result = await collection
+        .find({
+          Serial: data.Serial,
+          ProvinceId: data.ProvinceId,
+          ViwaterId: data.ViwaterId,
+        })
+        .toArray();
     }
 
     Connect.disconnect();
@@ -67,8 +115,16 @@ module.exports.Update = async function (data) {
   let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.updateMany(
-    { Serial: data.Serial },
-    { $set: { ProvinceId: data.ProvinceId } }
+    { _id: data._id },
+    {
+      $set: {
+        ProvinceId: data.ProvinceId,
+        Serial: data.Serial,
+        ProvinceName: data.ProvinceName,
+        ViwaterId: data.ViwterId,
+        ViwaterName: data.ViwaterName,
+      },
+    }
   );
 
   Connect.disconnect();

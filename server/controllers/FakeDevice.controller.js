@@ -18,6 +18,47 @@ module.exports.getFakeDeviceBySerial = async function (req, res) {
   }
 };
 
+module.exports.getFakeDeviceBySerialAndProvinceId = async function (req, res) {
+  try {
+    let serial = req.query.serial;
+    let provinceid = req.query.provinceid;
+
+    res
+      .status(200)
+      .json(
+        await FakeDeviceModel.getFakeDeviceBySerialAndProvinceId(
+          serial,
+          provinceid
+        )
+      );
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+module.exports.getFakeDeviceBySerialAndProvinceIdAndViwaterId = async function (
+  req,
+  res
+) {
+  try {
+    let serial = req.query.serial;
+    let provinceid = req.query.provinceid;
+    let viwaterid = req.query.viwaterid;
+
+    res
+      .status(200)
+      .json(
+        await FakeDeviceModel.getFakeDeviceBySerialAndProvinceIdAndViwaterId(
+          serial,
+          provinceid,
+          viwaterid
+        )
+      );
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
 module.exports.getFakeDeviceBySiteId = async function (req, res) {
   try {
     let siteid = req.query.siteid;
@@ -65,11 +106,9 @@ module.exports.update = async function (req, res) {
 
 module.exports.delete = async function (req, res) {
   try {
-    let serial = req.query;
+    let id = req.query.id;
 
-    res
-      .status(200)
-      .json(await (await FakeDeviceModel.Delete(serial)).deletedCount);
+    res.status(200).json(await (await FakeDeviceModel.Delete(id)).deletedCount);
   } catch (err) {
     res.status(500).json(err.message);
   }

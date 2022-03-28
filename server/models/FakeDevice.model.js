@@ -1,14 +1,26 @@
 const ConnectDB = require("../db/connect");
+const mongo = require("mongodb");
 
 const FakeDeviceCollection = "FakeDevice";
 const DeviceCollection = "Device";
 
 module.exports.FakeDevice = class FakeDevice {
-  constructor(serial, siteid, sitename, provinceid) {
+  constructor(
+    serial,
+    siteid,
+    sitename,
+    provinceid,
+    provincename,
+    viwaterid,
+    viwatername
+  ) {
     this.Serial = serial;
     this.SiteId = siteid;
     this.SiteName = sitename;
     this.ProvinceId = provinceid;
+    this.ProvinceName = provincename;
+    this.ViwaterId = viwaterid;
+    this.ViwaterName = viwatername;
   }
 };
 
@@ -30,6 +42,41 @@ module.exports.getFakeDeviceBySerial = async function (serial) {
   let collection = await Connect.connect(FakeDeviceCollection);
 
   let result = await collection.find({ Serial: serial }).toArray();
+
+  Connect.disconnect();
+
+  return result;
+};
+
+module.exports.getFakeDeviceBySerialAndProvinceId = async function (
+  serial,
+  provinceid
+) {
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(FakeDeviceCollection);
+
+  let result = await collection
+    .find({ Serial: serial, ProvinceId: provinceid })
+    .toArray();
+
+  Connect.disconnect();
+
+  return result;
+};
+
+module.exports.getFakeDeviceBySerialAndProvinceIdAndViwaterId = async function (
+  serial,
+  provinceid,
+  viwaterid
+) {
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(FakeDeviceCollection);
+
+  let result = await collection
+    .find({ Serial: serial, ProvinceId: provinceid, ViwaterId: viwaterid })
+    .toArray();
 
   Connect.disconnect();
 
@@ -68,6 +115,9 @@ module.exports.Insert = async function (data) {
   recivedData.SiteId = data.siteId;
   recivedData.SiteName = data.siteName;
   recivedData.ProvinceId = data.provinceId;
+  recivedData.ProvinceName = data.provinceName;
+  recivedData.ViwaterId = data.viwaterId;
+  recivedData.ViwaterName = data.viwaterName;
 
   let collection = await Connect.connect(FakeDeviceCollection);
   let deviceCollection = await Connect.connect(DeviceCollection);
@@ -83,6 +133,7 @@ module.exports.Insert = async function (data) {
         Serial: recivedData.Serial,
         ProvinceId: recivedData.ProvinceId,
         SiteId: recivedData.SiteId,
+        ViwaterId: recivedData.ViwaterId,
       })
       .toArray();
 
@@ -97,7 +148,11 @@ module.exports.Insert = async function (data) {
     result.IsRealDevice = false;
   } else {
     let check = await deviceCollection
-      .find({ Serial: recivedData.Serial, ProvinceId: recivedData.ProvinceId })
+      .find({
+        Serial: recivedData.Serial,
+        ProvinceId: recivedData.ProvinceId,
+        ViwaterId: recivedData.ViwaterId,
+      })
       .toArray();
 
     if (check.length > 0) {
@@ -107,12 +162,16 @@ module.exports.Insert = async function (data) {
       await collection.deleteMany({
         Serial: recivedData.Serial,
         ProvinceId: recivedData.ProvinceId,
+        ViwaterId: recivedData.ViwaterId,
+        SiteId: recivedData.SiteId,
       });
     } else {
       let checkExistsFakeDevice = await collection
         .find({
           Serial: recivedData.Serial,
           ProvinceId: recivedData.ProvinceId,
+          SiteId: recivedData.SiteId,
+          ViwaterId: recivedData.ViwaterId,
         })
         .toArray();
 
@@ -139,12 +198,16 @@ module.exports.Update = async function (data) {
   let collection = await Connect.connect(FakeDeviceCollection);
 
   let result = await collection.updateMany(
-    { Serial: data.Serial },
+    { _id: data._id },
     {
       $set: {
         SiteId: data.SiteId,
         SiteName: data.SiteName,
         ProvinceId: data.ProvinceId,
+        Serial: data.Serial,
+        ProvinceName: data.ProvinceNamel,
+        ViwaterId: data.ViwaterId,
+        ViwaterName: data.ViwaterName,
       },
     }
   );
@@ -154,12 +217,12 @@ module.exports.Update = async function (data) {
   return result;
 };
 
-module.exports.Delete = async function (serial) {
+module.exports.Delete = async function (id) {
   let Connect = new ConnectDB.Connect();
 
   let collection = await Connect.connect(FakeDeviceCollection);
 
-  let result = await collection.deleteMany({ Serial: serial });
+  let result = await collection.deleteMany({ _id: new mongo.ObjectId(id) });
 
   Connect.disconnect();
 

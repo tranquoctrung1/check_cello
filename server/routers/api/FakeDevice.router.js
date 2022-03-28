@@ -10,6 +10,16 @@ router.get(
 );
 
 router.get(
+  "/getFakeDeviceBySerialAndProvinceId",
+  FakeDeviceController.getFakeDeviceBySerialAndProvinceId
+);
+
+router.get(
+  "/getFakeDeviceBySerialAndProvinceIdAndViwaterId",
+  FakeDeviceController.getFakeDeviceBySerialAndProvinceIdAndViwaterId
+);
+
+router.get(
   "/getFakeDeviceBySiteId",
   FakeDeviceController.getFakeDeviceBySiteId
 );
