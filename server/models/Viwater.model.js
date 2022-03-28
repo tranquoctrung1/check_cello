@@ -1,6 +1,6 @@
 const ConnectDB = require("../db/connect");
 
-const ViwaterCollection = "Province";
+const ViwaterCollection = "Viwater";
 
 module.exports.Viwater = class Viwater {
   constructor(id, name) {

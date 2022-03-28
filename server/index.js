@@ -19,7 +19,7 @@ app.use(cors());
 app.use("/api/Province", ProvinceRoute);
 app.use("/api/Device", DeviceRoute);
 app.use("/api/FakeDevice", FakeDeviceRoute);
-app.use("/api/viwater", ViwaterRoute);
+app.use("/api/Viwater", ViwaterRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello");
