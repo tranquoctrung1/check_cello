@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 const ProvinceRoute = require("./routers/api/Province.router");
 const DeviceRoute = require("./routers/api/Device.router");
 const FakeDeviceRoute = require("./routers/api/FakeDevice.router");
+const ViwaterRoute = require("./routers/api/Viwater.router");
 
 const port = process.env.PORT || 3000;
 
@@ -18,6 +19,7 @@ app.use(cors());
 app.use("/api/Province", ProvinceRoute);
 app.use("/api/Device", DeviceRoute);
 app.use("/api/FakeDevice", FakeDeviceRoute);
+app.use("/api/viwater", ViwaterRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello");

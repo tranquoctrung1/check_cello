@@ -57,6 +57,8 @@ module.exports.Update = async function (data) {
     { $set: { Name: data.Name } }
   );
 
+  Connect.disconnect();
+
   return result;
 };
 
@@ -65,5 +67,7 @@ module.exports.Delete = async function (id) {
   const collection = await Connect.connect(ProvinceCollection);
 
   const result = await collection.deleteMany({ Id: id });
+
+  Connect.disconnect();
   return result;
 };
