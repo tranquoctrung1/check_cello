@@ -3,13 +3,15 @@ import SidebarReducer  from '../feature/sidebar/sidebarSlice';
 import AddingDeviceReducer from '../feature/AddingDevice/AddingDeviceSlice'
 import HostnameReducer  from '../feature/hostname/hostname';
 import FakeDeviceReducer from '../feature/FakeDevice/fakeDeviceSlice'
+import ViwaterReducer from '../feature/viwater/ViwaterSlice'
 
 export const store = configureStore({
   reducer: {
     sidebar: SidebarReducer,
     addingDevice: AddingDeviceReducer,
     hostname: HostnameReducer,
-    fakeDevice: FakeDeviceReducer
+    fakeDevice: FakeDeviceReducer,
+    viwater: ViwaterReducer,
   },
 });
 

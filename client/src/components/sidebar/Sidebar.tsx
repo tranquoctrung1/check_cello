@@ -55,6 +55,9 @@ const Sidebar = () => {
           <MenuItem icon={<RiAddLine />}>
             <Link to="/">Thêm Thiết Bị</Link>
           </MenuItem>
+          <MenuItem icon={<RiAddLine />}>
+            <Link to="/viwater">Thêm Mã Viwater</Link>
+          </MenuItem>
           <MenuItem icon={<AiOutlineTable />}>
             <Link to="/fakedevice">Danh Sách Thiết Bị Khác</Link>
           </MenuItem>

@@ -22,9 +22,9 @@ module.exports.insert = async function (req, res) {
   try {
     let data = req.body;
 
-    let result = await ViwaterModel.insert(data);
+    let result = await ViwaterModel.Insert(data);
 
-    res.status(200).json(result.insertedCount);
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json(err.message);
   }
@@ -34,7 +34,7 @@ module.exports.update = async function (req, res) {
   try {
     let data = req.body;
 
-    let result = await ViwaterModel.update(data);
+    let result = await ViwaterModel.Update(data);
 
     res.status(200).json(result.modifiedCount);
   } catch (err) {
@@ -46,7 +46,7 @@ module.exports.delete = async function (req, res) {
   try {
     let id = req.query.id;
 
-    let result = await ViwaterModel.delete(id);
+    let result = await ViwaterModel.Delete(id);
 
     res.status(200).json(result.deletedCount);
   } catch (err) {

@@ -1,4 +1,5 @@
 const ConnectDB = require("../db/connect");
+const mongo = require("mongodb");
 
 const ViwaterCollection = "Viwater";
 
@@ -46,6 +47,10 @@ module.exports.Insert = async function (data) {
 
     let result = await collection.insertMany(temp);
 
+    if (result.insertedCount >= 1) {
+      result = await collection.find({ Id: data.Id }).toArray();
+    }
+
     Connect.disconnect();
 
     return result;
@@ -59,7 +64,7 @@ module.exports.Update = async function (data) {
   let collection = await Connect.connect(ViwaterCollection);
 
   const result = await collection.updateMany(
-    { _id: data._id },
+    { _id: new mongo.ObjectId(data._id) },
     { $set: { Name: data.Name, Id: data.Id } }
   );
 
@@ -73,7 +78,7 @@ module.exports.Delete = async function (id) {
 
   let collection = await Connect.connect(ViwaterCollection);
 
-  let result = await collection.deleteMany({ _id: id });
+  let result = await collection.deleteMany({ _id: new mongo.ObjectId(id) });
 
   Connect.disconnect();
 

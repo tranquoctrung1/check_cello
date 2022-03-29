@@ -6,6 +6,7 @@ import ProSidebar from "./components/sidebar/Sidebar";
 import Home from "./components/home/home";
 import FakeDevice from "./components/fakeDevice/fakeDevice";
 import Headerbar from "./components/headerbar/Headerbar";
+import Viwater from "./components/viwater/viwater";
 
 function App() {
   useEffect(() => {
@@ -21,6 +22,7 @@ function App() {
           </div>
           <div className="right-container">
             <Routes>
+              <Route path="/viwater" element={<Viwater />} />
               <Route path="/fakedevice" element={<FakeDevice />} />
               <Route path="/" element={<Home />} />
             </Routes>
