@@ -169,7 +169,7 @@ const TableViwater = () => {
       <h3 className="box-form-title">Danh Sách Thiết Bị Đã Thêm</h3>
       <DataTable
         paginator
-        rows={5}
+        rows={10}
         emptyMessage="No devices found."
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} devices"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
@@ -179,6 +179,7 @@ const TableViwater = () => {
         dataKey="_id"
         responsiveLayout="scroll"
         filterDisplay="menu"
+        resizableColumns
         globalFilterFields={["serial", "privince"]}
       >
         <Column

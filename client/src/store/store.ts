@@ -4,6 +4,7 @@ import AddingDeviceReducer from '../feature/AddingDevice/AddingDeviceSlice'
 import HostnameReducer  from '../feature/hostname/hostname';
 import FakeDeviceReducer from '../feature/FakeDevice/fakeDeviceSlice'
 import ViwaterReducer from '../feature/viwater/ViwaterSlice'
+import ProvinceReducer from '../feature/province/ProvinceSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     hostname: HostnameReducer,
     fakeDevice: FakeDeviceReducer,
     viwater: ViwaterReducer,
+    province: ProvinceReducer,
   },
 });
 

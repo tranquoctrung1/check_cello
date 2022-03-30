@@ -20,7 +20,15 @@ export const AddingDeviceSlice = createSlice({
             state.value.push(action.payload);
         },
         updateAction: (state, action: PayloadAction<object>) => {
-            
+            let temp =  state.value.map(el => {
+                if(el["_id"] === action.payload["_id"])
+                {
+                    return {...el, ProvinceName: action.payload["ProvinceName"], ProvinceId: action.payload["ProvinceId"], ViwateId: action.payload["ViwateId"], ViwaterName: action.payload["ViwaterName"]};
+                }
+                return el;
+            });
+
+            state.value = temp;
         },
 
         deleteAction: (state, action: PayloadAction<object>) => {
