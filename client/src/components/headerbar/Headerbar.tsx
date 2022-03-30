@@ -20,6 +20,11 @@ const Headerbar = () => {
                   </MenuItem>
                 </div>
                 <div className="col-6">
+                  <MenuItem className="item-header" icon={<RiAddLine />}>
+                    <Link to="/viwater">Viwater</Link>
+                  </MenuItem>
+                </div>
+                <div className="col-6">
                   <MenuItem className="item-header" icon={<AiOutlineTable />}>
                     <Link to="/fakedevice">Danh Sách</Link>
                   </MenuItem>

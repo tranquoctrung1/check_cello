@@ -89,10 +89,10 @@ const FakeDevice = () => {
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
             ></Column>
             <Column
-              key="ProvinceMame"
-              field="ProvinceMame"
+              key="ProvinceName"
+              field="ProvinceName"
               header="Tên tỉnh"
-              filterField="ProvinceMame"
+              filterField="ProvinceName"
               sortable
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
