@@ -31,6 +31,11 @@ router.get(
 
 router.post("/insert", FakeDeviceController.insert);
 
+router.post(
+  "/insertDuplicateSerial",
+  FakeDeviceController.insertDuplicateSerial
+);
+
 router.patch("/update", FakeDeviceController.update);
 
 router.delete("/delete", FakeDeviceController.delete);

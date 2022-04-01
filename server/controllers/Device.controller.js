@@ -70,8 +70,27 @@ module.exports.insert = async function (req, res) {
 module.exports.update = async function (req, res) {
   try {
     let data = req.body;
-    res.status(200).json(await DeviceModel.Update(data).modifiedCount);
+
+    let result = await DeviceModel.Update(data);
+
+    res.status(200).json(result.modifiedCount);
   } catch (err) {
+    res.status(500).json(err.message);
+  }
+};
+
+module.exports.updateIsActive = async function (req, res) {
+  try {
+    let id = req.query.id;
+    let isActive = req.query.isActive;
+
+    isActive = isActive === "true";
+
+    let result = await DeviceModel.UpdateIsActive(id, isActive);
+
+    res.status(200).json(result.modifiedCount);
+  } catch (err) {
+    console.log(err.message);
     res.status(500).json(err.message);
   }
 };

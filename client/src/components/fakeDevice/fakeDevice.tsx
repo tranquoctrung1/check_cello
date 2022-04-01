@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addAction } from "../../feature/FakeDevice/fakeDeviceSlice";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
 
 import aixos from "axios";
 
@@ -15,6 +16,15 @@ const FakeDevice = () => {
   const hostname = useSelector((state: RootState) => state.hostname.value);
 
   const [isBusyGetDataFakeDevice, setIsBusyGetDataFakeDevice] = useState(false);
+  const [filters, setFilters] = useState({
+    Serial: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    SiteId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    SiteName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ProvinceId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ProvinceName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ViwaterId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ViwaterName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
 
   const dispatch = useDispatch();
 
@@ -51,6 +61,17 @@ const FakeDevice = () => {
             dataKey="_id"
             responsiveLayout="scroll"
             resizableColumns
+            filters={filters}
+            filterDisplay="row"
+            globalFilterFields={[
+              "Serial",
+              "SiteId",
+              "SiteName",
+              "ProvinceId",
+              "ProvinceName",
+              "ViwaterId",
+              "ViwaterName",
+            ]}
           >
             <Column
               key="Serial"
@@ -58,7 +79,9 @@ const FakeDevice = () => {
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
               header="Số Seri"
-              filterField="serial"
+              filterField="Serial"
+              filterPlaceholder="Serial"
+              filter
               sortable
             ></Column>
             <Column
@@ -68,6 +91,8 @@ const FakeDevice = () => {
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
               header="ID điểm"
               filterField="SiteId"
+              filterPlaceholder="Id điểm"
+              filter
               sortable
             ></Column>
             <Column
@@ -77,6 +102,8 @@ const FakeDevice = () => {
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
               header="Tên điểm"
               filterField="SiteName"
+              filterPlaceholder="Tên điểm"
+              filter
               sortable
             ></Column>
             <Column
@@ -84,6 +111,8 @@ const FakeDevice = () => {
               field="ProvinceId"
               header="Mã tỉnh"
               filterField="ProvinceId"
+              filterPlaceholder="Mã tỉnh"
+              filter
               sortable
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
@@ -93,6 +122,8 @@ const FakeDevice = () => {
               field="ProvinceName"
               header="Tên tỉnh"
               filterField="ProvinceName"
+              filterPlaceholder="Tên tỉnh"
+              filter
               sortable
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
@@ -102,6 +133,8 @@ const FakeDevice = () => {
               field="ViwaterId"
               header="Mã Viwater"
               filterField="ViwaterId"
+              filterPlaceholder="Id Viwater"
+              filter
               sortable
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
@@ -112,6 +145,8 @@ const FakeDevice = () => {
               field="ViwaterName"
               header="Tên Viwater"
               filterField="ViwaterName"
+              filterPlaceholder="Tên Viwater"
+              filter
               sortable
               headerStyle={{ width: "5rem" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}

@@ -92,6 +92,16 @@ module.exports.insert = async function (req, res) {
   }
 };
 
+module.exports.insertDuplicateSerial = async function (req, res) {
+  try {
+    let data = req.body;
+    res.status(200).json(await FakeDeviceModel.InsertDuplicateSerial(data));
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json(err.message);
+  }
+};
+
 module.exports.update = async function (req, res) {
   try {
     let data = req.body;

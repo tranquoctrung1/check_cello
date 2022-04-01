@@ -4,6 +4,8 @@ import {
   addAction,
   deleteAction,
   updateAction,
+  updateIsActiveLockAction,
+  updateIsActiveOpenLockAction,
 } from "../../feature/AddingDevice/AddingDeviceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -17,6 +19,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
 import { Dropdown } from "primereact/dropdown";
+import { Checkbox } from "primereact/checkbox";
 
 const TableDevice = () => {
   const value = useSelector((state: RootState) => state.addingDevice.value);
@@ -40,15 +43,12 @@ const TableDevice = () => {
   const [isBusyGetDataViwater, setIsBusyGetDataViwater] = useState(false);
   const [deviceDelete, setDeviceDelete] = useState({});
 
-  const [filter, setFilter] = useState({
-    serial: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
-    },
-    province: {
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }],
-    },
+  const [filters, setFilters] = useState({
+    Serial: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ProvinceId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ProvinceName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ViwaterId: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    ViwaterName: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
   const dispatch = useDispatch();
@@ -178,7 +178,6 @@ const TableDevice = () => {
 
   function handleEditClick(data) {
     setDevice({ ...data });
-
     setEditDialog(true);
   }
 
@@ -191,9 +190,30 @@ const TableDevice = () => {
   }
 
   function actionBodyTemplate(rowData) {
+    let lockButton;
+
+    if (rowData.IsActive === false) {
+      lockButton = (
+        <Button
+          icon="pi pi-lock"
+          className="p-button-rounded p-button-danger mr-2"
+          onClick={() => handleOpenLockClick(rowData)}
+        />
+      );
+    } else {
+      lockButton = (
+        <Button
+          icon="pi pi-lock-open"
+          className="p-button-rounded p-button-primary mr-2"
+          onClick={() => handleLockClick(rowData)}
+        />
+      );
+    }
+
     return (
       <div>
         <React.Fragment>
+          {lockButton}
           <Button
             icon="pi pi-pencil"
             className="p-button-rounded p-button-success mr-2"
@@ -284,6 +304,42 @@ const TableDevice = () => {
     setAppearEditError(false);
   }
 
+  function onIsActiveChange(e) {
+    setDevice({ ...device, IsActive: !device["IsActive"] });
+  }
+
+  function handleOpenLockClick(data) {
+    let url = `${hostname}/device/updateIsActive?id=${data["_id"]}&isActive=true`;
+
+    axios
+      .patch(url)
+      .then((res) => {
+        if (res.data >= 1) {
+          setAppearEdit(true);
+          dispatch(updateIsActiveOpenLockAction(data));
+        } else {
+          setAppearEditError(true);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
+  function handleLockClick(data) {
+    let url = `${hostname}/device/updateIsActive?id=${data["_id"]}&isActive=false`;
+
+    axios
+      .patch(url)
+      .then((res) => {
+        if (res.data >= 1) {
+          setAppearEdit(true);
+          dispatch(updateIsActiveLockAction(data));
+        } else {
+          setAppearEditError(true);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  }
+
   return (
     <div>
       <h3 className="box-form-title">Danh Sách Thiết Bị Đã Thêm</h3>
@@ -298,9 +354,15 @@ const TableDevice = () => {
         onSelectionChange={onSelectionChange}
         dataKey="_id"
         responsiveLayout="scroll"
-        filters={filter}
-        filterDisplay="menu"
-        globalFilterFields={["serial", "privince"]}
+        filters={filters}
+        filterDisplay="row"
+        globalFilterFields={[
+          "Serial",
+          "ProvinceId",
+          "ProvinceName",
+          "ViwaterId",
+          "ViwaterName",
+        ]}
         resizableColumns
       >
         <Column
@@ -309,14 +371,18 @@ const TableDevice = () => {
           headerStyle={{ width: "5rem" }}
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
           header="Số Seri"
-          filterField="serial"
+          filterField="Serial"
+          filterPlaceholder="Serial"
+          filter
           sortable
         ></Column>
         <Column
           key="ProvinceId"
           field="ProvinceId"
           header="Mã tỉnh"
-          filterField="privince"
+          filterField="ProvinceId"
+          filterPlaceholder="Mã tỉnh"
+          filter
           sortable
           headerStyle={{ width: "5rem" }}
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
@@ -329,6 +395,8 @@ const TableDevice = () => {
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
           header="Tên Tỉnh"
           filterField="ProvinceName"
+          filterPlaceholder="Tên tỉnh"
+          filter
           sortable
         ></Column>
         <Column
@@ -338,6 +406,8 @@ const TableDevice = () => {
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
           header="Mã Viwater"
           filterField="ViwaterId"
+          filterPlaceholder="Mã Viwatwer"
+          filter
           sortable
         ></Column>
         <Column
@@ -347,6 +417,8 @@ const TableDevice = () => {
           bodyStyle={{ textAlign: "center", overflow: "visible" }}
           header="Tên Viwater"
           filterField="ViwaterName"
+          filterPlaceholder="Tên Viwatwer"
+          filter
           sortable
         ></Column>
         <Column
@@ -445,6 +517,17 @@ const TableDevice = () => {
           {submitted && !device["ViwaterId"] && (
             <small className="p-error">* Mã Viwater không được trống!!</small>
           )}
+        </div>
+
+        <div className="field">
+          <Checkbox
+            id="IsActive"
+            checked={device["IsActive"]}
+            onChange={(e) => onIsActiveChange(e)}
+          />
+          <label className="label-checkbox" htmlFor="IsActive">
+            Hoạt Động
+          </label>
         </div>
       </Dialog>
       {appearWarningDelete && (

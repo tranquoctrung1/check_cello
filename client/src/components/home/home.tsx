@@ -7,6 +7,8 @@ import {
   Select,
   FormControl,
   InputLabel,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
@@ -27,6 +29,7 @@ interface IFormInputs {
   ProvinceName: string;
   ViwaterId: string;
   ViwaterName: string;
+  IsActive: boolean;
 }
 
 const Home = () => {
@@ -43,6 +46,7 @@ const Home = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isBusyGetDataProvince, setIsBusyGetDataProvince] = useState(false);
   const [isBusyGetDataViwater, setIsBusyGetDataViwater] = useState(false);
+  const [isActive, setIsActive] = useState(true);
 
   const {
     control,
@@ -89,6 +93,7 @@ const Home = () => {
         ProvinceName: provinceName,
         ViwaterId: viwaterId,
         ViwaterName: viwaterName,
+        IsActive: isActive,
       };
 
       axios
@@ -162,6 +167,10 @@ const Home = () => {
       setViwaterName(_viwater["Name"]);
       setViwaterId(_viwater["Id"]);
     }
+  }
+
+  function handleCheckBoxChange() {
+    setIsActive(!isActive);
   }
 
   return (
@@ -302,7 +311,24 @@ const Home = () => {
                     </div>
                   )}
                 </Grid>
-
+                <Grid item xs={12}>
+                  <Controller
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={isActive}
+                            onChange={handleCheckBoxChange}
+                          />
+                        }
+                        label="Hoạt Động"
+                        {...field}
+                      />
+                    )}
+                    name="IsActive"
+                    control={control}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <input type="submit" className="btn-submit" value="Thêm" />
                 </Grid>

@@ -192,6 +192,47 @@ module.exports.Insert = async function (data) {
   return result;
 };
 
+module.exports.InsertDuplicateSerial = async function (data) {
+  let recivedData = {};
+  recivedData.Serial = data.serial;
+  recivedData.SiteId = data.siteId;
+  recivedData.SiteName = data.siteName;
+  recivedData.ProvinceId = data.provinceId;
+  recivedData.ProvinceName = data.provinceName;
+  recivedData.ViwaterId = data.viwaterId;
+  recivedData.ViwaterName = data.viwaterName;
+
+  let count = 0;
+
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(FakeDeviceCollection);
+
+  let check = await collection
+    .find({
+      Serial: recivedData.Serial,
+      ProvinceId: recivedData.ProvinceId,
+      SiteId: recivedData.SiteId,
+      ViwaterId: recivedData.ViwaterId,
+    })
+    .toArray();
+
+  if (check <= 0) {
+    let temp = [];
+    temp.push(recivedData);
+
+    let result = await collection.insertMany(temp);
+
+    if (result.insertedCount > 0) {
+      count += result.insertedCount;
+    }
+  }
+
+  Connect.disconnect();
+
+  return count;
+};
+
 module.exports.Update = async function (data) {
   let Connect = new ConnectDB.Connect();
 

@@ -115,14 +115,34 @@ module.exports.Update = async function (data) {
   let collection = await Connect.connect(DeviceCollection);
 
   let result = await collection.updateMany(
-    { _id: data._id },
+    { _id: new mongo.ObjectId(data._id) },
     {
       $set: {
         ProvinceId: data.ProvinceId,
         Serial: data.Serial,
         ProvinceName: data.ProvinceName,
-        ViwaterId: data.ViwterId,
+        ViwaterId: data.ViwaterId,
         ViwaterName: data.ViwaterName,
+        IsActive: data.IsActive,
+      },
+    }
+  );
+
+  Connect.disconnect();
+
+  return result;
+};
+
+module.exports.UpdateIsActive = async function (id, isactive) {
+  let Connect = new ConnectDB.Connect();
+
+  let collection = await Connect.connect(DeviceCollection);
+
+  let result = await collection.updateMany(
+    { _id: new mongo.ObjectId(id) },
+    {
+      $set: {
+        IsActive: isactive,
       },
     }
   );
